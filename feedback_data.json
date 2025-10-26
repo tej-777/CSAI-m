@@ -1,0 +1,10 @@
+[
+	{"priority": "high", "feedback": "Priority level assigned: high", "summary": "Intent: general\nResponse: Your refund will be processed within 5 business days."},
+	{"priority": "low", "feedback": "Priority level assigned: low", "summary": "Intent: information\nResponse: {'error': 'Could not classify topic', 'original_query': 'The app crashed. How can I fix it?'}"},
+	{"priority": "low", "feedback": "Priority level assigned: low", "summary": "Intent: general\nResponse: For billing support, please provide your invoice number."},
+	{"priority": "high", "feedback": "Priority level assigned: high", "summary": "Intent: issue\nResponse: {'error': 'Could not classify topic', 'original_query': 'Why is my account not working?'}"},
+	{"priority": "low", "feedback": "Priority level assigned: low", "summary": "Intent: general\nResponse: {'error': 'Could not classify topic', 'original_query': 'hii'}"}
+]
+{"priority": "high", "feedback": "Priority level assigned: high", "summary": "Intent: general\nResponse: Your refund will be processed within 5 business days."}
+{"priority": "low", "feedback": "Priority level assigned: low", "summary": "Intent: information\nResponse: {'error': 'Could not classify topic', 'original_query': 'I need some help'}"}
+{"priority": "low", "feedback": "Priority level assigned: low", "summary": "Intent: general\nResponse: For billing support, please provide your invoice number."}

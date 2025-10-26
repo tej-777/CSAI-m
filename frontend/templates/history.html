@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat History</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
+</head>
+<body>
+    <div class="history-container">
+        <h2>Conversation History</h2>
+        <div id="history-list"></div>
+        <a href="/">Back to Chat</a>
+    </div>
+    <script>
+    // Fetch and display history from API
+    fetch('/api/history')
+        .then(response => response.json())
+        .then(data => {
+            const container = document.getElementById('history-list');
+            data.forEach(item => {
+                const div = document.createElement('div');
+                div.classList.add('history-item');
+                div.innerHTML = `<b>User:</b> ${item.user_query}<br/><b>Bot:</b> ${item.bot_response}`;
+                container.appendChild(div);
+            });
+        });
+    </script>
+</body>
+</html>
