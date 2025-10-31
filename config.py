@@ -9,7 +9,7 @@ class Settings:
         "GEMINI_API_KEY", "GEMINI_KEY_REDACTED")
 
     LANGGRAPH_API_KEY = ""
-        "LANGGRAPH_API_KEY", "langgraph_test_api_key")
+        "LANGGRAPH_API_KEY", "LANGGRAPH_KEY_REDACTED")
 
     DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///supportai.db")
     FEEDBACK_STORE = "feedback_data.json"
