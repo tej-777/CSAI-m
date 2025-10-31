@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404: Page not found</title>
+    <link rel="stylesheet" href="/assets/v5/main.css">
+    <link rel="icon" href="/assets/v5/link_icon.ico">
+
+    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+
+
+</head>
+<body>
+
+    <div class="navbar">
+        <div class="navbar-title">
+            <p style="cursor: pointer;" onclick="document.location.href='/'">Rick Roll Link Generator</p>
+        </div>
+    </div>
+
+    <div class="container" id="container">
+        <h1>404: Page not found</h1>
+        <h5>The link may have expired or been deleted</h5>
+    </div>
+
+</body>
+</html>
