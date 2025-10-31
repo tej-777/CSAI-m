@@ -74,10 +74,11 @@
     .message {
       display: flex;
       margin-bottom: 20px;
-      animation: slideIn 0.3s ease;
+      animation: messageSlideIn 0.3s ease;
+      position: relative;
     }
 
-    @keyframes slideIn {
+    @keyframes messageSlideIn {
       from {
         opacity: 0;
         transform: translateY(10px);
@@ -112,6 +113,45 @@
       border-bottom-left-radius: 5px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     }
+
+    /* Floating action bar on hover */
+    .msg-actions {
+      position: absolute;
+      right: 8px;
+      bottom: 6px;
+      display: none;
+      gap: 8px;
+      align-items: center;
+      background: rgba(0,0,0,0.7);
+      color: #e5e7eb;
+      padding: 4px 8px;
+      border-radius: 16px;
+    }
+    /* Do not reveal actions on entire row hover */
+    /* .message:hover .msg-actions { display: flex; } */
+    .msg-action-btn {
+      background: transparent;
+      border: none;
+      color: inherit;
+      cursor: pointer;
+      padding: 2px 4px;
+      font-size: 14px;
+      line-height: 1;
+    }
+    .msg-action-sep { opacity: 0.6; font-size: 12px; }
+
+    /* User-specific: actions under bubble, right-aligned, only on hover */
+    .message.user .msg-actions {
+      position: static;
+      display: none;
+      background: transparent;
+      color: #6b7280;
+      padding: 0;
+      margin-top: 6px;
+      justify-content: flex-end;
+    }
+    /* Show only when hovering the user message bubble itself */
+    .message.user .message-content:hover .msg-actions { display: flex; }
 
     .message-avatar {
       width: 40px;
@@ -242,25 +282,427 @@
       background: #667eea;
       color: white;
     }
+
+    /* Sidebar styles */
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      z-index: 50;
+    }
+    .sidebar-overlay.active { display: block; }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 300px;
+      max-width: 85vw;
+      background: #0b1020;
+      color: #e5e7eb;
+      border-right: 1px solid rgba(88,101,242,0.18);
+      transform: translateX(-100%);
+      transition: transform 0.25s ease;
+      z-index: 60;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar.dark {
+      background: #0b1020;
+      color: #e5e7eb;
+      border-right-color: #1f2937;
+    }
+    .sidebar.active { transform: translateX(0); }
+
+    /* Desktop: when sidebar is open, shift the main container instead of overlaying */
+    @media (min-width: 1100px) {
+      body.sidebar-open .chat-container { margin-left: 300px; }
+      .sidebar-overlay { display: none !important; }
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 12px;
+      border-bottom: 1px solid rgba(88,101,242,0.18);
+    }
+    .sidebar-title { font-weight: 600; font-size: 14px; color: #c7d2fe; }
+    .icon-btn {
+      background: transparent; border: none; cursor: pointer; color: inherit;
+      padding: 6px; border-radius: 6px;
+    }
+    .icon-btn:hover { background: rgba(0,0,0,0.06); }
+    .dark .icon-btn:hover { background: rgba(255,255,255,0.06); }
+    .chat-header .bot-avatar { cursor: pointer; filter: drop-shadow(0 0 6px rgba(88,101,242,0.55)); }
+    .chat-header .bot-avatar:hover { filter: drop-shadow(0 0 12px rgba(88,101,242,0.85)); }
+
+    .sidebar-actions { padding: 10px 12px; }
+    .new-chat-btn {
+      width: 100%; padding: 10px 12px; border: 1px solid rgba(88,101,242,0.35); cursor: pointer; border-radius: 10px;
+      background: linear-gradient(135deg, rgba(88,101,242,0.18), rgba(6,182,212,0.12)); color: #e5e7eb; font-weight: 700;
+      box-shadow: 0 0 12px rgba(88,101,242,0.25), inset 0 0 12px rgba(6,182,212,0.12);
+    }
+    .new-chat-btn:hover { box-shadow: 0 0 18px rgba(88,101,242,0.38), inset 0 0 16px rgba(6,182,212,0.18); filter: saturate(1.1); }
+
+    .chat-list { padding: 8px 8px 16px; overflow-y: auto; flex: 1; }
+    /* Hide scrollbars in sidebar chat list */
+    .chat-list { scrollbar-width: none; -ms-overflow-style: none; }
+    .chat-list::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    /* Space between saved chats */
+    .chat-list .chat-item { margin-bottom: 15px; }
+    .chat-list .chat-item:last-child { margin-bottom: 0; }
+
+    /* Avoid body scrollbar when possible */
+    html, body { overflow: hidden; }
+    .chat-item { width: 100%; text-align: left; border: none; background: transparent; cursor: pointer; }
+    .chat-item-inner {
+      display: block; width: 100%; padding: 10px 10px; border-radius: 10px; font-size: 14px;
+      color: #c7d2fe; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      background: rgba(14,18,36,0.6); border: 1px solid rgba(88,101,242,0.22);
+      box-shadow: inset 0 0 12px rgba(88,101,242,0.08);
+    }
+    .chat-item-inner:hover { border-color: rgba(88,101,242,0.45); box-shadow: 0 0 14px rgba(88,101,242,0.25), inset 0 0 14px rgba(88,101,242,0.12); }
+    .chat-item.active .chat-item-inner { border-color: rgba(6,182,212,0.45); box-shadow: 0 0 18px rgba(6,182,212,0.32), inset 0 0 18px rgba(6,182,212,0.18); background: rgba(10,16,36,0.7); }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex;
+      gap: 8px;
+      padding: 10px 20px;
+      background: #ffffff;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .tab-btn {
+      padding: 10px 16px;
+      border: 2px solid transparent;
+      border-radius: 20px;
+      background: #f1f1ff;
+      color: #4a4a8a;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .tab-btn.active {
+      border-color: #667eea;
+      background: #ffffff;
+      color: #333;
+    }
+
+    /* History panel */
+    .history-panel {
+      display: none;
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      background: #f9fafb;
+    }
+
+    .history-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .history-item {
+      background: #ffffff;
+      border: 1px solid #ececec;
+      border-radius: 12px;
+      padding: 12px 14px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    .history-item time {
+      display: block;
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 6px;
+    }
+
+    .history-q {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .history-a {
+      color: #333;
+    }
   </style>
+  <!-- Theme overrides for neon dark UI -->
+  <style>
+    /* App background with hex pattern */
+    body {
+      background: radial-gradient(1200px 800px at 50% 0%, #0e1229 0%, #070a18 60%, #060812 100%);
+      display: block; /* remove centering so content can span full width */
+      min-height: 100vh;
+      margin: 0;
+    }
+    .chat-container {
+      background: rgba(4, 6, 14, 0.95);
+      border: 1px solid rgba(88, 101, 242, 0.1);
+      box-shadow: 0 0 0 1px rgba(88,101,242,0.08), 0 25px 80px rgba(0,0,0,0.6);
+      width: 100%;
+      max-width: 100%;
+      height: 100vh;
+      margin: 0;
+      border-radius: 0;
+    }
+    .chat-header {
+      background: linear-gradient(135deg, rgba(26,33,70,0.9), rgba(16,20,46,0.9));
+      border-bottom: 1px solid rgba(88,101,242,0.18);
+    }
+
+    /* Hex grid overlay */
+    .chat-messages {
+      position: relative;
+      background:
+        radial-gradient(circle at 25px 25px, rgba(88,101,242,0.08) 2px, transparent 3px) 0 0/50px 50px,
+        radial-gradient(circle at 0 0, rgba(88,101,242,0.05) 2px, transparent 3px) 25px 25px/50px 50px,
+        linear-gradient(#0b1020, #0b1020);
+      border: 1px solid rgba(88,101,242,0.22);
+      border-radius: 0px;
+      box-shadow: 0 0 26px rgba(88,101,242,0.22), inset 0 0 20px rgba(6,182,212,0.12);
+      overflow: auto;
+      /* Hide scrollbars but allow scroll */
+      scrollbar-width: none;        /* Firefox */
+      -ms-overflow-style: none;     /* IE/Edge */
+    }
+    .chat-messages::-webkit-scrollbar { display: none; width: 0; height: 0; }
+    .chat-messages::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 0px;
+      background: radial-gradient(120% 120% at 50% 0%, rgba(88,101,242,0.22), transparent 60%);
+      pointer-events: none;
+      filter: blur(8px);
+      opacity: 0.55;
+      animation: areaPulse 3.2s ease-in-out infinite;
+    }
+    @keyframes areaPulse { 0%,100%{opacity:.45} 50%{opacity:.8} }
+
+    /* Neon bubbles */
+    .message.user .message-content {
+      /* Match bot glow style */
+      background: radial-gradient(130% 140% at 80% 20%, rgba(75, 197, 255, 0.14), rgba(5, 150, 255, 0.08) 40%, rgba(12,20,40,0.85) 60%);
+      border: 1px solid rgba(5,150,255,0.35);
+      border-radius: 28px 44px 28px 44px;
+      box-shadow: 0 0 20px rgba(5,150,255,0.25), 0 0 60px rgba(5,150,255,0.12);
+      color: #dbeafe;
+    }
+    .message.bot .message-content {
+      background: radial-gradient(130% 140% at 20% 20%, rgba(75, 197, 255, 0.15), rgba(5, 150, 255, 0.08) 40%, rgba(12,20,40,0.9) 60%);
+      border: 1px solid rgba(5,150,255,0.35);
+      border-radius: 28px 44px 28px 44px;
+      box-shadow: 0 0 20px rgba(5,150,255,0.25), 0 0 60px rgba(5,150,255,0.12);
+      color: #cfe9ff;
+    }
+
+    /* User action icons under bubble */
+    .msg-action-btn { color: #a5b4fc; }
+    .message.user .msg-actions { color: #9aa3b2; }
+
+    /* Input bar */
+    .chat-input-container {
+      display: flex; align-items: center; gap: 10px; padding: 14px 20px;
+      border-top: 1px solid rgba(88,101,242,0.18);
+      background: linear-gradient(135deg, rgba(14,18,36,0.9), rgba(10,14,30,0.85));
+      box-shadow: 0 0 18px rgba(88,101,242,0.22), inset 0 0 12px rgba(6,182,212,0.10);
+      border-left: 1px solid rgba(88,101,242,0.18);
+      border-right: 1px solid rgba(88,101,242,0.18);
+    }
+    .input-wrap { position: relative; flex: 1; }
+    .chat-input { width: 100%; padding: 12px 14px; padding-right: 46px; border-radius: 14px; border: 1px solid rgba(88,101,242,0.35); background: rgba(14,18,36,0.85); color: #e5e7eb; box-shadow: inset 0 0 12px rgba(88,101,242,0.18); }
+    .chat-input:hover,
+    .chat-input:focus {
+      box-shadow: 0 0 18px rgba(88,101,242,0.38), inset 0 0 14px rgba(6,182,212,0.18);
+      filter: saturate(1.05);
+      outline: none;
+    }
+    .chat-input::placeholder { color: #9aa3b2; }
+    .send-button {
+      background: linear-gradient(135deg, #2563eb, #06b6d4);
+      box-shadow: 0 0 12px rgba(37,99,235,0.45), 0 0 24px rgba(6,182,212,0.25);
+      position: relative;
+    }
+    .send-button:disabled,
+    .send-button.disabled {
+      opacity: 0.6;
+      filter: grayscale(0.1) saturate(0.9);
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    .send-button:hover {
+      box-shadow: 0 0 16px rgba(37,99,235,0.6), 0 0 36px rgba(6,182,212,0.35);
+      filter: saturate(1.1);
+    }
+    .send-button::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 28px;
+      background: radial-gradient(120% 120% at 50% 50%, rgba(37,99,235,0.25), transparent 60%);
+      pointer-events: none;
+      opacity: 0.6;
+      animation: glowPulse 2.2s ease-in-out infinite;
+    }
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.45; }
+      50% { opacity: 0.85; }
+    }
+
+    /* Plus inside input */
+    .input-wrap #attachPickBtn.attach-inside {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      width: 30px; height: 30px; display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 8px;
+      background: rgba(14,18,36,0.85);
+      color: #cfe9ff;
+      border: 1px solid rgba(88,101,242,0.35);
+      box-shadow: inset 0 0 10px rgba(88,101,242,0.12);
+    }
+    .input-wrap #attachPickBtn.attach-inside:hover {
+      box-shadow: 0 0 14px rgba(88,101,242,0.35), inset 0 0 12px rgba(6,182,212,0.18);
+      filter: saturate(1.05);
+    }
+
+    /* (Insights panel removed) */
+
+    /* Attachments UI */
+    .attach-bar { width: 100%; margin: 8px 20px 0; padding: 8px; border: 1px dashed rgba(88,101,242,0.35); border-radius: 10px; background: rgba(14,18,36,0.5); color: #cfe9ff; }
+    .attach-actions { display: flex; align-items: center; gap: 8px; }
+    .attach-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .attach-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 999px; border: 1px solid rgba(88,101,242,0.35); background: rgba(10,16,36,0.7); font-size: 12px; color: #cfe9ff; }
+    .attach-chip button { border: none; background: transparent; color: #9aa3b2; cursor: pointer; }
+    .attach-bar.dragover { border-color: rgba(6,182,212,0.65); box-shadow: 0 0 18px rgba(6,182,212,0.26); }
+  </style>
+  <style>
+    /* Neon glow for preset quick action buttons (Refund, Medical, etc.) */
+    .quick-actions {
+      padding: 10px 20px;
+      display: block;
+      background: linear-gradient(135deg, rgba(14,18,36,0.9), rgba(10,14,30,0.85));
+      border: 1px solid rgba(88,101,242,0.22);
+      box-shadow: 0 0 18px rgba(88,101,242,0.22), inset 0 0 12px rgba(6,182,212,0.10);
+    }
+    /* Make marquee contents respect spacing */
+    .quick-actions marquee { display: block; padding: 4px 0; }
+    .quick-actions marquee .quick-action-btn { margin-right: 12px; }
+    .quick-actions marquee .quick-action-btn:last-child { margin-right: 0; }
+    .quick-actions .quick-action-btn {
+      border: 1px solid rgba(88,101,242,0.40);
+      background: linear-gradient(135deg, rgba(88,101,242,0.20), rgba(6,182,212,0.14));
+      color: #e5e7eb;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 600;
+      text-shadow: 0 0 6px rgba(155, 215, 255, 0.35);
+      box-shadow: 0 0 14px rgba(88,101,242,0.35), inset 0 0 14px rgba(6,182,212,0.16);
+      transition: box-shadow .2s ease, filter .2s ease, transform .1s ease;
+    }
+    .quick-actions .quick-action-btn:hover,
+    .quick-actions .quick-action-btn:focus {
+      box-shadow: 0 0 24px rgba(88,101,242,0.60), inset 0 0 20px rgba(6,182,212,0.26);
+      filter: saturate(1.15);
+      outline: none;
+      transform: translateY(-1px);
+    }
+    .quick-actions .quick-action-btn::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 999px;
+      background: radial-gradient(120% 120% at 50% 50%, rgba(88,101,242,0.26), transparent 60%);
+      pointer-events: none;
+      opacity: 0.65;
+      animation: qaPulse 2.6s ease-in-out infinite;
+    }
+    .quick-actions .quick-action-btn { position: relative; overflow: hidden; }
+    .quick-actions .quick-action-btn:disabled { opacity: .55; cursor: not-allowed; box-shadow: none; }
+    @keyframes qaPulse { 0%,100%{opacity:.4} 50%{opacity:.8} }
+
+    /* Rating styles */
+    .rate-wrap { margin-top: 10px; }
+    .rate-row { display: flex; gap: 10px; align-items: center; }
+    .rate-btn { background: rgba(14,18,36,0.8); border: 1px solid rgba(5,150,255,0.35); color: #cfe9ff; border-radius: 999px; padding: 6px 10px; cursor: pointer; box-shadow: 0 0 8px rgba(5,150,255,0.18); }
+    .rate-btn:hover { box-shadow: 0 0 14px rgba(5,150,255,0.3); filter: saturate(1.1); }
+    .rate-btn.liked-anim { animation: likeBurst 600ms ease-out; }
+    .rate-btn.disliked-anim { animation: dislikeShake 500ms ease-out; }
+    @keyframes likeBurst {
+      0% { transform: scale(1); box-shadow: 0 0 8px rgba(5,150,255,0.18); }
+      50% { transform: scale(1.2); box-shadow: 0 0 22px rgba(5,150,255,0.55); }
+      100% { transform: scale(1); box-shadow: 0 0 10px rgba(5,150,255,0.25); }
+    }
+    @keyframes dislikeShake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+      100% { transform: translateX(0); }
+    }
+    .mini-chip { margin-left: 8px; padding: 2px 8px; border-radius: 999px; font-size: 11px; color: #9bd7ff; border: 1px solid rgba(5,150,255,0.35); background: rgba(10,16,36,0.7); opacity: 0; animation: chipFade 1500ms ease-out forwards; }
+    @keyframes chipFade { 0% { opacity: 0; transform: translateY(-4px); } 20% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(-4px); } }
+    .feedback-panel { margin-top: 8px; background: rgba(10,16,36,0.7); border: 1px solid rgba(5,150,255,0.25); border-radius: 10px; padding: 8px; }
+    /* Hide by default and animate open */
+    .feedback-panel { display: none; max-height: 0; opacity: 0; overflow: hidden; transition: max-height .25s ease, opacity .2s ease; }
+    .feedback-panel.open { display: block; max-height: 260px; opacity: 1; }
+    .feedback-text { width: 100%; resize: vertical; background: rgba(14,18,36,0.85); color: #e5e7eb; border: 1px solid rgba(88,101,242,0.25); border-radius: 8px; padding: 8px; box-shadow: inset 0 0 10px rgba(88,101,242,0.12); }
+    .feedback-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 8px; }
+
+    /* Basic Markdown styling inside bot/user bubbles */
+    .message-content h1, .message-content h2, .message-content h3 { margin: 8px 0 6px; color: #e5edff; }
+    .message-content p { margin: 6px 0; line-height: 1.5; }
+    .message-content ul, .message-content ol { margin: 6px 0 6px 18px; }
+    .message-content li { margin: 3px 0; }
+    .message-content code { background: rgba(14,18,36,0.85); border: 1px solid rgba(88,101,242,0.25); padding: 1px 4px; border-radius: 4px; }
+    .message-content pre { background: rgba(10,16,36,0.85); border: 1px solid rgba(88,101,242,0.25); padding: 10px; border-radius: 10px; overflow-x: auto; box-shadow: inset 0 0 10px rgba(88,101,242,0.12); }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.6/dist/purify.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
   <div class="chat-container">
     <div class="chat-header">
-      <div class="bot-avatar">🤖</div>
+      <div class="bot-avatar" id="botAvatar" title="Chats">🤖</div>
       <div class="header-info">
         <h2>Customer Support AI Assistant</h2>
         <p>Online • Ready to help</p>
       </div>
     </div>
 
+    <!-- Sidebar overlay and drawer -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    <aside id="sidebar" class="sidebar">
+      <div class="sidebar-header">
+        <span class="sidebar-title">Chats</span>
+        <button id="closeSidebarBtn" class="icon-btn" title="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="sidebar-actions">
+        <button id="newChatBtn" class="new-chat-btn">+ New Chat</button>
+      </div>
+      <div class="chat-list" id="chatList"></div>
+    </aside>
+
+    
+
     <div class="quick-actions">
+      <marquee>
       <button class="quick-action-btn" onclick="sendQuickMessage('How do I get a refund?')">💰 Refund</button>
       <button class="quick-action-btn" onclick="sendQuickMessage('Technical support')">🔧 Tech Help</button>
       <button class="quick-action-btn" onclick="sendQuickMessage('Product information')">📦 Products</button>
       <button class="quick-action-btn" onclick="sendQuickMessage('Medical Support')">🩺 Medical</button>
       <button class="quick-action-btn" onclick="sendQuickMessage('Hello!')">👋 Say Hi</button>
+    </marquee>
     </div>
 
     <div class="chat-messages" id="chatMessages">
@@ -273,24 +715,74 @@
     </div>
 
     <div class="chat-input-container">
-      <input type="text" id="messageInput" class="chat-input" placeholder="Type your message..."
-        onkeypress="handleKeyPress(event)">
+      <div class="input-wrap">
+        <input type="text" id="messageInput" class="chat-input" placeholder="Type your message..."
+          onkeypress="handleKeyPress(event)">
+        <button class="icon-btn attach-inside" id="attachPickBtn" title="Add context">➕</button>
+        <input type="file" id="attachFileInput" style="display:none;" multiple>
+      </div>
       <button class="send-button" onclick="sendMessage()">Send 📤</button>
     </div>
+
+    
   </div>
 
   <script>
-    async function sendMessage() {
+    let activeTab = 'chat';
+    let lastUserMessage = '';
+    let messageSeq = 0; // incremental id for messages
+    const botState = {}; // id -> { versions: [text], idx: number, query: string }
+    const userState = {}; // id -> { text: string }
+    let lastUserMsgId = null; // id of most recently added user bubble
+    const userToBot = {}; // userMsgId -> botMsgId
+    let isSending = false; // prevent back-to-back sends until response arrives
+    let sidebarOpen = false;
+    let chats = [];
+    let activeChatId = null;
+    let activeAttachments = []; // [{id,name,mime,size}]
+
+    function showTab(tab) {
+      activeTab = 'chat';
+      const chatBtn = document.getElementById('tabChat');
+      const chat = document.getElementById('chatMessages');
+      const inputBar = document.querySelector('.chat-input-container');
+      if (chatBtn) chatBtn.classList.add('active');
+      if (chat) chat.style.display = 'block';
+      if (inputBar) inputBar.style.display = 'flex';
+    }
+
+    function setSendingState(sending) {
+      isSending = sending;
       const input = document.getElementById('messageInput');
-      const message = input.value.trim();
+      const sendBtn = document.querySelector('.send-button');
+      const qaBtns = document.querySelectorAll('.quick-actions .quick-action-btn');
+      if (input) input.disabled = sending;
+      if (sendBtn) sendBtn.disabled = sending;
+      qaBtns.forEach(b => { b.disabled = sending; });
+    }
+
+    async function sendMessage(overrideMessage, options) {
+      const input = document.getElementById('messageInput');
+      const message = (overrideMessage !== undefined ? String(overrideMessage) : input.value).trim();
 
       if (!message) return;
+      if (isSending) return; // block until previous answer arrives
 
-      // Add user message
-      addMessage(message, 'user');
-      input.value = '';
+      // Optionally add user message bubble (skip when silent resend)
+      const silent = options && options.silent === true;
+      lastUserMessage = message; // keep for bot version tracking
+      let createdUserId = null;
+      if (!silent) {
+        createdUserId = addMessage(message, 'user');
+        if (overrideMessage === undefined) input.value = '';
+        // If there are staged attachments, render them under this user message
+        if (activeAttachments && activeAttachments.length > 0) {
+          appendMessageAttachments(createdUserId, activeAttachments);
+        }
+      }
 
-      // Show typing indicator
+      // Show typing indicator and lock UI
+      setSendingState(true);
       showTypingIndicator();
 
       try {
@@ -299,15 +791,47 @@
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ query: message })
+          body: JSON.stringify({ query: message, chat_id: activeChatId || null, attachments: (activeAttachments||[]).map(a=>a.id) })
         });
 
         const data = await response.json();
         hideTypingIndicator();
-        addMessage(data.summary || 'Sorry, I couldn\'t process that.', 'bot');
+        // Update active chat id if backend created/returned one and refresh chat list for title updates
+        if (data && data.chat_id && data.chat_id !== activeChatId) {
+          activeChatId = data.chat_id;
+          renderChatList();
+          fetchChatsList();
+        }
+        const botText = data.summary || 'Sorry, I couldn\'t process that.';
+        if (silent) {
+          const targetUserId = options && options.targetUserId ? Number(options.targetUserId) : null;
+          let targetId = null;
+          if (targetUserId && userToBot[targetUserId]) {
+            targetId = userToBot[targetUserId];
+          } else {
+            targetId = findLatestBotIdByQuery(message);
+          }
+          if (targetId && botState[targetId]) {
+            botState[targetId].versions.push(botText);
+            botState[targetId].idx = botState[targetId].versions.length - 1;
+            updateBotText(targetId);
+            updateBotNavState(targetId);
+          } else {
+            // fallback if no existing bot message found
+            const newBotId = addMessage(botText, 'bot');
+            if (targetUserId) userToBot[targetUserId] = newBotId;
+          }
+        } else {
+          const newBotId = addMessage(botText, 'bot');
+          if (lastUserMsgId != null) userToBot[lastUserMsgId] = newBotId;
+        }
       } catch (error) {
         hideTypingIndicator();
         addMessage('Sorry, there was an error. Please try again.', 'bot');
+      } finally {
+        setSendingState(false);
+        // Clear staged attachments after a send
+        clearAttachmentStaging();
       }
     }
 
@@ -322,18 +846,230 @@
 
       const content = document.createElement('div');
       content.className = 'message-content';
-      content.textContent = text;
 
       if (sender === 'user') {
+        const id = ++messageSeq;
+        messageDiv.dataset.msgId = String(id);
+        // text container
+        const textSpan = document.createElement('div');
+        textSpan.id = `user-text-${id}`;
+        textSpan.textContent = text;
+        content.appendChild(textSpan);
+
+        // append in user order: content then avatar
         messageDiv.appendChild(content);
         messageDiv.appendChild(avatar);
+
+        // Floating actions (copy, flag, edit, resend)
+        const actions = document.createElement('div');
+        actions.className = 'msg-actions';
+        actions.innerHTML = `
+          <button class="msg-action-btn" title="Copy" data-role="copy">📋</button>
+          <button class="msg-action-btn" title="Edit" data-role="edit">✏️</button>
+        `;
+        actions.querySelector('[data-role="copy"]').onclick = function(){ copyText(textSpan.textContent); };
+        actions.querySelector('[data-role="edit"]').onclick = function(){ startEditUserMessage(id); };
+        // place actions under the bubble content
+        content.appendChild(actions);
+
+        // track user state
+        userState[id] = { text: text };
+        lastUserMsgId = id;
       } else {
+        // BOT MESSAGE WITH VERSIONING
+        const id = ++messageSeq;
+        messageDiv.dataset.msgId = String(id);
         messageDiv.appendChild(avatar);
+        // Build inner structure: text span + controls
+        const textSpan = document.createElement('div');
+        textSpan.id = `bot-text-${id}`;
+        textSpan.innerHTML = renderMarkdown(text);
+        content.appendChild(textSpan);
+        // Inline controls for bot: Prev/Next + counter, Resummarize, Re-research
+        const controls = document.createElement('div');
+        controls.style.marginTop = '8px';
+        controls.style.display = 'flex';
+        controls.style.alignItems = 'center';
+        controls.style.gap = '6px';
+
+        // Version navigation
+        const prevBtn = document.createElement('button');
+        prevBtn.className = 'quick-action-btn';
+        prevBtn.textContent = '◀';
+        prevBtn.title = 'Previous version';
+        prevBtn.onclick = function(){ prevBotVersion(id); };
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'quick-action-btn';
+        nextBtn.textContent = '▶';
+        nextBtn.title = 'Next version';
+        nextBtn.onclick = function(){ nextBotVersion(id); };
+
+        const counter = document.createElement('span');
+        counter.id = `bot-count-${id}`;
+        counter.style.fontSize = '12px';
+        counter.style.color = '#555';
+        counter.textContent = '1/1';
+
+        // Action buttons
+        const resBtn = document.createElement('button');
+        resBtn.className = 'quick-action-btn';
+        resBtn.textContent = 'Resummarize';
+        resBtn.onclick = function(){ doResummarize(id, resBtn); };
+
+        const reBtn = document.createElement('button');
+        reBtn.className = 'quick-action-btn';
+        reBtn.textContent = 'Re-research';
+        reBtn.onclick = function(){ doReresearch(id, reBtn); };
+
+        controls.appendChild(prevBtn);
+        controls.appendChild(nextBtn);
+        controls.appendChild(counter);
+        controls.appendChild(resBtn);
+        controls.appendChild(reBtn);
+        content.appendChild(controls);
+
+        // Rating controls: like / dislike (dislike opens comment box)
+        const rateWrap = document.createElement('div');
+        rateWrap.className = 'rate-wrap';
+        rateWrap.innerHTML = `
+          <div class="rate-row">
+            <button class="rate-btn like" title="Like">👍</button>
+            <button class="rate-btn dislike" title="Dislike">👎</button>
+          </div>
+          <div class="feedback-panel" id="dislike-panel-${id}">
+            <textarea id="dislike-text-${id}" class="feedback-text" rows="3" placeholder="What went wrong? Optional details help me learn."></textarea>
+            <div class="feedback-actions">
+              <button class="quick-action-btn submit-dislike">Submit</button>
+              <button class="quick-action-btn cancel-dislike">Cancel</button>
+            </div>
+          </div>
+        `;
+
+        content.appendChild(rateWrap);
+        // attach handlers to avoid scope issues from inline attributes
+        const likeBtn = rateWrap.querySelector('.rate-btn.like');
+        const dislikeBtn = rateWrap.querySelector('.rate-btn.dislike');
+        const submitDb = rateWrap.querySelector('.submit-dislike');
+        const cancelDb = rateWrap.querySelector('.cancel-dislike');
+        if (likeBtn) likeBtn.addEventListener('click', async () => {
+          likeBtn.classList.remove('liked-anim'); // reset if present
+          void likeBtn.offsetWidth; // reflow to restart animation
+          likeBtn.classList.add('liked-anim');
+          try { await rateAnswer(id, 'like'); } finally {
+            const chip = document.createElement('span');
+            chip.className = 'mini-chip';
+            chip.textContent = 'Thanks!';
+            rateWrap.querySelector('.rate-row').appendChild(chip);
+            setTimeout(()=> chip.remove(), 1600);
+          }
+        });
+        if (dislikeBtn) dislikeBtn.addEventListener('click', () => showDislikePanel(id));
+        if (submitDb) submitDb.addEventListener('click', async () => {
+          dislikeBtn.classList.remove('disliked-anim'); void dislikeBtn.offsetWidth; dislikeBtn.classList.add('disliked-anim');
+          await submitDislike(id);
+          const chip = document.createElement('span');
+          chip.className = 'mini-chip';
+          chip.textContent = 'Sent';
+          rateWrap.querySelector('.rate-row').appendChild(chip);
+          setTimeout(()=> chip.remove(), 1600);
+        });
+        if (cancelDb) cancelDb.addEventListener('click', () => hideDislikePanel(id));
+
         messageDiv.appendChild(content);
+
+        // Initialize bot state for this message
+        botState[id] = { versions: [text], idx: 0, query: lastUserMessage };
+        updateBotNavState(id);
       }
 
       messagesContainer.appendChild(messageDiv);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      return Number(messageDiv.dataset.msgId);
+    }
+
+    function startEditUserMessage(id) {
+      const state = userState[id];
+      const el = document.getElementById(`user-text-${id}`);
+      if (!state || !el) return;
+      // replace text element with input + save/cancel
+      const parent = el.parentElement;
+      const original = state.text;
+      const wrapper = document.createElement('div');
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.value = original;
+      input.style.width = '100%';
+      input.style.padding = '8px';
+      input.style.border = '1px solid #e5e7eb';
+      input.style.borderRadius = '6px';
+      input.id = `user-edit-${id}`;
+
+      const actions = document.createElement('div');
+      actions.style.marginTop = '6px';
+      actions.style.display = 'flex';
+      actions.style.gap = '6px';
+
+      const resendBtn = document.createElement('button');
+      resendBtn.className = 'quick-action-btn';
+      resendBtn.textContent = 'Resend';
+      resendBtn.onclick = function(){ saveAndResendUserMessage(id); };
+
+      const cancelBtn = document.createElement('button');
+      cancelBtn.className = 'quick-action-btn';
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.onclick = function(){ cancelEditUserMessage(id, original); };
+
+      actions.appendChild(resendBtn);
+      actions.appendChild(cancelBtn);
+
+      wrapper.appendChild(input);
+      wrapper.appendChild(actions);
+
+      parent.replaceChild(wrapper, el);
+      wrapper.id = `user-edit-wrap-${id}`;
+    }
+
+    function cancelEditUserMessage(id, original) {
+      const wrap = document.getElementById(`user-edit-wrap-${id}`);
+      if (!wrap) return;
+      const textEl = document.createElement('div');
+      textEl.id = `user-text-${id}`;
+      textEl.textContent = String(original || userState[id]?.text || '');
+      wrap.parentElement.replaceChild(textEl, wrap);
+    }
+
+    function saveEditUserMessage(id) {
+      const input = document.getElementById(`user-edit-${id}`);
+      const wrap = document.getElementById(`user-edit-wrap-${id}`);
+      if (!input || !wrap) return;
+      const newVal = input.value.trim();
+      userState[id].text = newVal;
+      const textEl = document.createElement('div');
+      textEl.id = `user-text-${id}`;
+      textEl.textContent = newVal;
+      wrap.parentElement.replaceChild(textEl, wrap);
+    }
+
+    function saveAndResendUserMessage(id) {
+      const input = document.getElementById(`user-edit-${id}`);
+      const wrap = document.getElementById(`user-edit-wrap-${id}`);
+      if (!input || !wrap) return;
+      const newVal = input.value.trim();
+      userState[id].text = newVal;
+      const textEl = document.createElement('div');
+      textEl.id = `user-text-${id}`;
+      textEl.textContent = newVal;
+      wrap.parentElement.replaceChild(textEl, wrap);
+      // Silent resend targeting same bot message if mapped
+      sendMessage(newVal, { silent: true, targetUserId: id });
+    }
+
+    function resendUserMessage(id) {
+      const state = userState[id];
+      if (!state) return;
+      // Resend without creating a new user bubble
+      sendMessage(state.text, { silent: true, targetUserId: id });
     }
 
     function showTypingIndicator() {
@@ -358,8 +1094,9 @@
       if (indicator) indicator.remove();
     }
 
-    function handleKeyPress(event) {
-      if (event.key === 'Enter') {
+    function handleKeyPress(e) {
+      if (e.key === 'Enter') {
+        if (isSending) { e.preventDefault(); return; }
         sendMessage();
       }
     }
@@ -368,6 +1105,461 @@
       document.getElementById('messageInput').value = message;
       sendMessage();
     }
+
+    function showDislikePanel(id) {
+      const panel = document.getElementById(`dislike-panel-${id}`);
+      if (!panel) return;
+      panel.style.display = 'block';
+      panel.classList.add('open');
+      // animate to natural height
+      panel.style.maxHeight = panel.scrollHeight + 'px';
+      try { panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+    }
+
+    function hideDislikePanel(id) {
+      const panel = document.getElementById(`dislike-panel-${id}`);
+      if (!panel) return;
+      panel.classList.remove('open');
+      panel.style.maxHeight = '0px';
+      setTimeout(() => { panel.style.display = 'none'; }, 260);
+    }
+
+    async function rateAnswer(id, rating) {
+      try {
+        const st = botState[id];
+        const current = st ? (st.versions[st.idx] || '') : '';
+        const payload = { rating: String(rating || 'like'), feedback: '', message: String(current || ''), chat_id: activeChatId || null };
+        await fetch('/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+      } catch (e) { /* no-op */ }
+    }
+
+    async function submitDislike(id) {
+      try {
+        const txt = document.getElementById(`dislike-text-${id}`);
+        if (!txt) return;
+        const st = botState[id];
+        const current = st ? (st.versions[st.idx] || '') : '';
+        const payload = { rating: 'dislike', feedback: String(txt.value || ''), message: String(current || ''), chat_id: activeChatId || null };
+        await fetch('/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+        txt.value = '';
+        hideDislikePanel(id);
+      } catch (e) { /* no-op */ }
+    }
+
+    function renderMarkdown(md) {
+      try {
+        // Configure marked for safe line breaks and GitHub-like lists
+        if (window.marked) {
+          marked.setOptions({ breaks: true, gfm: true });
+          const raw = marked.parse(String(md || ''));
+          return window.DOMPurify ? DOMPurify.sanitize(raw) : raw;
+        }
+        return String(md || '');
+      } catch (e) {
+        return String(md || '');
+      }
+    }
+
+    // ----- Sidebar logic -----
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const closeSidebarBtn = document.getElementById('closeSidebarBtn');
+    const chatListEl = document.getElementById('chatList');
+    const newChatBtn = document.getElementById('newChatBtn');
+
+    const botAvatarBtn = document.getElementById('botAvatar');
+    if (botAvatarBtn) botAvatarBtn.addEventListener('click', () => toggleSidebar(!sidebarOpen));
+    closeSidebarBtn.addEventListener('click', () => toggleSidebar(false));
+    sidebarOverlay.addEventListener('click', () => toggleSidebar(false));
+    newChatBtn.addEventListener('click', () => createNewChat());
+
+    function toggleSidebar(open) {
+      sidebarOpen = open;
+      if (open) {
+        sidebar.classList.add('active');
+        if (window.innerWidth >= 1100) {
+          document.body.classList.add('sidebar-open');
+          sidebarOverlay.classList.remove('active');
+        } else {
+          sidebarOverlay.classList.add('active');
+          document.body.classList.remove('sidebar-open');
+        }
+      } else {
+        sidebar.classList.remove('active');
+        sidebarOverlay.classList.remove('active');
+        document.body.classList.remove('sidebar-open');
+      }
+    }
+
+    // Keep layout responsive to resizing while sidebar is open
+    window.addEventListener('resize', () => {
+      if (!sidebarOpen) return;
+      if (window.innerWidth >= 1100) {
+        document.body.classList.add('sidebar-open');
+        sidebarOverlay.classList.remove('active');
+      } else {
+        document.body.classList.remove('sidebar-open');
+        sidebarOverlay.classList.add('active');
+      }
+    });
+
+    async function fetchChatsList() {
+      try {
+        const res = await fetch('/api/chats');
+        if (!res.ok) throw new Error('Failed to load chats');
+        chats = await res.json(); // expects [{id,title,createdAt}]
+        renderChatList();
+      } catch (e) {
+        chatListEl.innerHTML = '<div style="padding:8px 10px;font-size:13px;color:#ef4444;">Failed to load chats.</div>';
+      }
+    }
+
+    function renderChatList() {
+      if (!Array.isArray(chats) || chats.length === 0) {
+        chatListEl.innerHTML = '<div style="padding:8px 10px;font-size:13px;color:#6b7280;">No chats yet.</div>';
+        return;
+      }
+      chatListEl.innerHTML = chats.map(c => `
+        <div class="chat-item ${c.id === activeChatId ? 'active' : ''}" style="position:relative;">
+          <button class="chat-item-inner" onclick="selectChat('${c.id}')" title="${escapeHtml(c.title || '')}">
+            ${escapeHtml(c.title || 'Untitled')}
+          </button>
+          <button class="icon-btn" title="Delete chat" onclick="event.stopPropagation(); deleteChat('${c.id}')" style="position:absolute; right:6px; top:50%; transform:translateY(-50%); display:none; color:#ef4444;">
+            🗑️
+          </button>
+        </div>
+      `).join('');
+      // Show trash only on hover
+      const items = chatListEl.querySelectorAll('.chat-item');
+      items.forEach(it => {
+        it.addEventListener('mouseenter', () => {
+          const del = it.querySelector('[title="Delete chat"]');
+          if (del) del.style.display = 'inline-block';
+        });
+        it.addEventListener('mouseleave', () => {
+          const del = it.querySelector('[title="Delete chat"]');
+          if (del) del.style.display = 'none';
+        });
+      });
+    }
+
+    async function deleteChat(id) {
+      try {
+        const ok = confirm('Delete this chat?');
+        if (!ok) return;
+        const res = await fetch('/api/chat/' + encodeURIComponent(id), { method: 'DELETE', cache: 'no-store' });
+        const data = await res.json();
+        if (data && data.deleted) {
+          // Remove locally and refresh list
+          chats = chats.filter(c => c.id !== id);
+          if (activeChatId === id) {
+            activeChatId = (chats[0] ? chats[0].id : null);
+            if (activeChatId) {
+              selectChat(activeChatId);
+            } else {
+              clearChatWindow();
+            }
+          }
+          renderChatList();
+        }
+      } catch (e) {
+        // Optional: show error feedback
+      }
+    }
+
+    async function selectChat(id) {
+      try {
+        activeChatId = id;
+        renderChatList();
+        toggleSidebar(false);
+        const res = await fetch(`/api/chat/${id}`);
+        if (!res.ok) throw new Error('Failed to fetch chat');
+        const chat = await res.json(); // expects {id,title,createdAt,messages:[{role,content}]}
+        renderChatWindow(chat);
+      } catch (e) {
+        addMessage('Failed to load chat.', 'bot');
+      }
+    }
+
+    async function createNewChat() {
+      try {
+        const res = await fetch('/api/chat/new', { method: 'POST' });
+        if (!res.ok) throw new Error('Failed to create chat');
+        const chat = await res.json();
+        // Prepend and set active
+        chats = [{ id: chat.id, title: chat.title, createdAt: chat.createdAt }, ...chats];
+        activeChatId = chat.id;
+        renderChatList();
+        toggleSidebar(false);
+        // Clear current window
+        clearChatWindow();
+      } catch (e) {
+        addMessage('Failed to create new chat.', 'bot');
+      }
+    }
+
+    function clearChatWindow() {
+      const container = document.getElementById('chatMessages');
+      container.innerHTML = '';
+      // Optionally, add a welcome bot message
+      const welcome = document.createElement('div');
+      welcome.className = 'message bot';
+      welcome.innerHTML = '<div class="message-avatar">🤖</div><div class="message-content">New chat started. Ask me anything!</div>';
+      container.appendChild(welcome);
+    }
+
+    function renderChatWindow(chat) {
+      const container = document.getElementById('chatMessages');
+      container.innerHTML = '';
+      if (!chat || !Array.isArray(chat.messages)) return;
+      chat.messages.forEach(m => {
+        addMessage(m.content || '', m.role === 'user' ? 'user' : 'bot');
+      });
+    }
+
+    async function doResummarize(id, btn) {
+      try {
+        btn.disabled = true;
+        showTypingIndicator();
+        const resp = await fetch('/resummarize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: botState[id]?.query || lastUserMessage, chat_id: activeChatId || null })
+        });
+        const data = await resp.json();
+        hideTypingIndicator();
+        if (data && typeof data.summary === 'string') {
+          botState[id].versions.push(data.summary);
+          botState[id].idx = botState[id].versions.length - 1;
+          updateBotText(id);
+          updateBotNavState(id);
+        } else {
+          addMessage('Could not resummarize.', 'bot');
+        }
+      } catch (e) {
+        hideTypingIndicator();
+        addMessage('Error during resummarize.', 'bot');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function doReresearch(id, btn) {
+      try {
+        btn.disabled = true;
+        showTypingIndicator();
+        const resp = await fetch('/reresearch', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: botState[id]?.query || lastUserMessage, chat_id: activeChatId || null })
+        });
+        const data = await resp.json();
+        hideTypingIndicator();
+        if (data && typeof data.summary === 'string') {
+          botState[id].versions.push(data.summary);
+          botState[id].idx = botState[id].versions.length - 1;
+          updateBotText(id);
+          updateBotNavState(id);
+        } else {
+          addMessage('Could not re-research.', 'bot');
+        }
+      } catch (e) {
+        hideTypingIndicator();
+        addMessage('Error during re-research.', 'bot');
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    async function fetchHistory(force) {
+      try {
+        if (activeTab !== 'history' && !force) return;
+        const response = await fetch('/api/history?ts=' + Date.now(), { cache: 'no-store' });
+        const data = await response.json();
+        const list = Array.isArray(data.history) ? data.history : [];
+        renderHistory(list);
+      } catch (e) {
+        const container = document.getElementById('historyList');
+        container.innerHTML = '<div class="history-item">Failed to load history.</div>';
+      }
+    }
+
+    function renderHistory(items) {
+      const container = document.getElementById('historyList');
+      if (!items.length) {
+        container.innerHTML = '<div class="history-item">No history yet.</div>';
+        return;
+      }
+      container.innerHTML = items.map(function(it) {
+        var ts = it.timestamp ? new Date(it.timestamp).toLocaleString() : '';
+        return (
+          '<div class="history-item">' +
+            '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">' +
+              '<time>' + ts + '</time>' +
+              '<div>' +
+                '<button class="quick-action-btn" style="padding:4px 8px;font-size:12px;margin-right:6px;" onclick="sendMessage(' + JSON.stringify(String(it.user_query || '')) + ', { silent: true })">Resend</button>' +
+                '<button class="quick-action-btn" style="padding:4px 8px;font-size:12px;" onclick="deleteHistoryItem(' + Number(it.id) + ')">Delete</button>' +
+              '</div>' +
+            '</div>' +
+            '<div class="history-q">🧑 User: ' + escapeHtml(it.user_query || '') + '</div>' +
+            '<div class="history-a">🤖 Bot: ' + escapeHtml(it.bot_response || '') + '</div>' +
+          '</div>'
+        );
+      }).join('');
+    }
+
+    async function deleteHistoryItem(id) {
+      try {
+        const res = await fetch('/api/history/' + encodeURIComponent(id) + '?ts=' + Date.now(), {
+          method: 'DELETE',
+          headers: { 'Cache-Control': 'no-store' }
+        });
+        // Regardless of status, refresh the list
+        await fetchHistory(true);
+      } catch (e) {
+        // Minimal UX message: could also inline-notify
+        const container = document.getElementById('historyList');
+        // no-op, we simply refresh
+      }
+    }
+
+    async function clearAllHistory() {
+      try {
+        const ok = confirm('Clear all history?');
+        if (!ok) return;
+        await fetch('/api/history?ts=' + Date.now(), { method: 'DELETE', cache: 'no-store' });
+        await fetchHistory(true);
+      } catch (e) {
+        // no-op
+      }
+    }
+
+    function escapeHtml(str) {
+      var map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+      return String(str || '').replace(/[&<>"']/g, function(c){ return map[c]; });
+    }
+
+    function updateBotText(id) {
+      const state = botState[id];
+      const el = document.getElementById(`bot-text-${id}`);
+      if (!state || !el) return;
+      el.textContent = state.versions[state.idx];
+      const cnt = document.getElementById(`bot-count-${id}`);
+      if (cnt) cnt.textContent = `${state.idx + 1}/${state.versions.length}`;
+    }
+
+    function updateBotNavState(id) {
+      const state = botState[id];
+      if (!state) return;
+      const msg = document.querySelector(`.message.bot[data-msg-id="${id}"]`) || document.querySelector(`.message.bot[data-msgid="${id}"]`);
+      // Buttons are within the same message; enable/disable based on idx
+      const buttons = msg ? msg.querySelectorAll('.quick-action-btn') : null;
+      if (buttons && buttons.length >= 2) {
+        const prevBtn = buttons[0];
+        const nextBtn = buttons[1];
+        prevBtn.disabled = state.idx <= 0;
+        nextBtn.disabled = state.idx >= state.versions.length - 1;
+      }
+      updateBotText(id);
+    }
+
+    function prevBotVersion(id) {
+      const state = botState[id];
+      if (!state) return;
+      if (state.idx > 0) {
+        state.idx -= 1;
+        updateBotNavState(id);
+      }
+    }
+
+    function nextBotVersion(id) {
+      const state = botState[id];
+      if (!state) return;
+      if (state.idx < state.versions.length - 1) {
+        state.idx += 1;
+        updateBotNavState(id);
+      }
+    }
+
+    function copyText(t) {
+      try { navigator.clipboard.writeText(String(t || '')); } catch (e) {}
+    }
+    function flagItem(role, id) {
+      // Placeholder: hook into feedback flow if needed
+      console.log('Flag clicked for', role, id);
+    }
+
+    // Helper: find latest bot message id for a given query
+    function findLatestBotIdByQuery(query) {
+      let latestId = null;
+      const q = String(query || '');
+      for (const key in botState) {
+        const id = Number(key);
+        const st = botState[key];
+        if (st && st.query === q) {
+          if (latestId === null || id > latestId) latestId = id;
+        }
+      }
+      return latestId;
+    }
+
+    // ----- Attachments helpers -----
+    function humanSize(bytes){ try{ if(bytes<1024) return bytes+" B"; if(bytes<1024*1024) return (bytes/1024).toFixed(1)+" KB"; return (bytes/1024/1024).toFixed(1)+" MB";}catch(e){return String(bytes||'')}}
+    function renderAttachChips(){
+      const list = document.getElementById('attachList');
+      if (!list) return;
+      list.innerHTML = (activeAttachments||[]).map((a,idx)=>`<span class="attach-chip" data-idx="${idx}">📎 ${escapeHtml(a.name)} <span style="opacity:.7">(${humanSize(a.size||0)})</span> <button title="Remove" onclick="removeAttachment(${idx})">✖</button></span>`).join('');
+    }
+    function removeAttachment(idx){
+      if (!Array.isArray(activeAttachments)) return;
+      activeAttachments.splice(idx,1);
+      renderAttachChips();
+    }
+    function clearAttachmentStaging(){ activeAttachments = []; renderAttachChips(); }
+    async function ensureChatForUpload(){ if (!activeChatId){ await createNewChat(); } }
+    async function uploadPickedFiles(files){
+      await ensureChatForUpload();
+      if (!files || files.length===0) return;
+      const fd = new FormData();
+      fd.append('chat_id', activeChatId || '');
+      for (const f of files){ fd.append('files', f); }
+      const res = await fetch('/api/upload', { method:'POST', body: fd });
+      if (!res.ok) throw new Error('Upload failed');
+      const data = await res.json();
+      const items = (data && data.attachments) || [];
+      activeAttachments = activeAttachments.concat(items);
+      renderAttachChips();
+    }
+    function appendMessageAttachments(msgId, atts){
+      try{
+        if (!atts || atts.length===0) return;
+        const msg = document.querySelector(`.message.user[data-msg-id="${msgId}"]`);
+        if (!msg) return;
+        const content = msg.querySelector('.message-content');
+        const row = document.createElement('div');
+        row.className = 'attach-list';
+        row.style.marginTop = '6px';
+        row.innerHTML = atts.map(a=>`<span class="attach-chip">📎 <a href="/api/attachment/${a.id}" target="_blank" rel="noopener" style="color:#9bd7ff;text-decoration:none;">${escapeHtml(a.name)}</a> <span style="opacity:.7">(${humanSize(a.size||0)})</span></span>`).join('');
+        content.appendChild(row);
+      }catch(e){}
+    }
+    function initAttachmentUI(){
+      const bar = document.getElementById('attachBar');
+      const pick = document.getElementById('attachPickBtn');
+      const input = document.getElementById('attachFileInput');
+      if (pick) pick.addEventListener('click', ()=> input && input.click());
+      if (input) input.addEventListener('change', async (e)=>{ try{ await uploadPickedFiles(e.target.files); input.value=''; }catch(err){} });
+      if (bar){
+        ;['dragenter','dragover'].forEach(ev=> bar.addEventListener(ev, (e)=>{ e.preventDefault(); e.stopPropagation(); bar.classList.add('dragover'); }));
+        ;['dragleave','drop'].forEach(ev=> bar.addEventListener(ev, (e)=>{ e.preventDefault(); e.stopPropagation(); bar.classList.remove('dragover'); }));
+        bar.addEventListener('drop', async (e)=>{ const files = e.dataTransfer && e.dataTransfer.files; if (files && files.length){ try{ await uploadPickedFiles(files); }catch(err){} } });
+      }
+      renderAttachChips();
+    }
+
+    // Initial load: fetch chat titles and init attachments UI
+    fetchChatsList();
+    initAttachmentUI();
   </script>
 </body>
 

@@ -17,15 +17,22 @@ def handle_universal_query(query: str, conversation_history: list = None) -> dic
             context = "\n".join(
                 [f"User: {h['user']}\nBot: {h['bot']}" for h in conversation_history[-3:]])
 
-        # System prompt for friendly, conversational AI
-        system_instruction = """You are a friendly, helpful AI assistant for customer support. 
-You can handle:
-- Customer support questions (billing, technical issues, product information)
-- General conversation and small talk
-- Any other topics users want to discuss
+        # System prompt for structured, helpful answers
+        system_instruction = """You are a friendly, helpful AI assistant for customer support.
+Return answers in clean, scannable Markdown like ChatGPT/Gemini.
 
-Be conversational, warm, and helpful. For support queries, provide clear actionable advice.
-For casual chat, be engaging and natural. Keep responses concise but informative."""
+Formatting (STRICT):
+- Use clear sections in this order when applicable:
+  1. Summary
+  2. Steps (if procedural) OR Key Points (if not procedural)
+  3. Tips/Notes
+  4. Next Steps / Resources
+- Use numbered steps for procedures; bullet points for key points.
+- Keep paragraphs short (2-3 sentences). Avoid walls of text.
+- Use fenced code blocks with language when showing commands or code (e.g., ```bash, ```python).
+- Do not add code fences around entire answers; only for code/commands.
+- Be concise and actionable; do not invent facts.
+"""
 
         # Prepare the full prompt
         full_prompt = f"{system_instruction}\n\nConversation history:\n{context}\n\nUser: {query}\n\nAssistant:"

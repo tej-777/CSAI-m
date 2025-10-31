@@ -15,6 +15,10 @@ class Settings:
     FEEDBACK_STORE = "feedback_data.json"
     DEBUG = True
 
+    # MongoDB (GridFS) for attachments
+    MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017/")
+    MONGO_DB_NAME = os.getenv("MONGO_DB_NAME", "CSAI")
+
     # Client API settings
     API_BASE_URL = os.getenv("API_BASE_URL", f"http://localhost:{PORT}")
     REQUEST_TIMEOUT_SECONDS = float(os.getenv("REQUEST_TIMEOUT_SECONDS", 10))

@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: csai-chatbot
+    env: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app -k uvicorn.workers.UvicornWorker -b 0.0.0.0:$PORT --timeout 180
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.13.0
+      - key: mongodb://localhost:27017/
+        sync: false
+      - key: MONGO_DB_NAME
+        value: CSAI
+      - key: GEMINI_KEY_REDACTED
+        sync: false
+    autoDeploy: true
+    
+# Optional: install OS packages (Tesseract OCR, Poppler) used by server-side OCR
+# Render automatically reads apt.txt if present at repo root.

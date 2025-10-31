@@ -32,7 +32,29 @@ Score: X/5
 Evaluation: [one sentence]"""
 
         result = model.generate_content(prompt)
-        feedback_text = result.text.strip()
+
+        # Safely extract text
+        feedback_text = None
+        try:
+            if getattr(result, 'text', None):
+                feedback_text = (result.text or "").strip()
+        except Exception:
+            feedback_text = None
+
+        if not feedback_text:
+            try:
+                candidates = getattr(result, 'candidates', None) or []
+                if candidates:
+                    parts = getattr(candidates[0], 'content', None)
+                    if parts and getattr(parts, 'parts', None):
+                        texts = [getattr(p, 'text', '') for p in parts.parts]
+                        feedback_text = "\n".join([t for t in texts if t]).strip()
+            except Exception:
+                feedback_text = None
+
+        if not feedback_text:
+            logger.warning("Critic produced no text; using default feedback")
+            feedback_text = "Response appears acceptable."
 
         logger.info("Critic feedback generated")
 

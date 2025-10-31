@@ -30,3 +30,31 @@ class DatabaseManager:
         history = session.query(Conversation).order_by(Conversation.timestamp.desc()).limit(limit).all()
         session.close()
         return history
+
+    def delete_conversation(self, conv_id: int) -> bool:
+        session = self.Session()
+        try:
+            obj = session.query(Conversation).filter(Conversation.id == conv_id).one_or_none()
+            if not obj:
+                session.close()
+                return False
+            session.delete(obj)
+            session.commit()
+            session.close()
+            return True
+        except Exception:
+            session.rollback()
+            session.close()
+            return False
+
+    def clear_history(self) -> int:
+        session = self.Session()
+        try:
+            count = session.query(Conversation).delete()
+            session.commit()
+            session.close()
+            return int(count or 0)
+        except Exception:
+            session.rollback()
+            session.close()
+            return 0
