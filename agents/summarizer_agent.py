@@ -3,7 +3,8 @@ from config import settings
 from utils.logger import logger
 import uuid
 
-genai.configure(api_key=settings.GEMINI_API_KEY)
+# Force API key flow (not ADC) and use REST transport
+genai.configure(api_key=settings.GEMINI_API_KEY, transport="rest")
 
 
 def summarize_output(routing_result: dict) -> str:
@@ -19,7 +20,7 @@ def summarize_output(routing_result: dict) -> str:
 
         # Ask Gemini to polish/summarize. Use higher temperature on resummarize to get variation
         model = genai.GenerativeModel(
-            model_name='models/gemini-2.5-flash',
+            model_name='gemini-2.5-flash',
             generation_config={
                 'temperature': 0.8 if is_resummarize else 0.3,
                 'max_output_tokens': 400,

@@ -1,5 +1,181 @@
 [
   {
+    "id": "d0578320-d284-4c8c-bb24-cfdefe1736cf",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:40:23.528316",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hey"
+      },
+      {
+        "role": "assistant",
+        "content": "Hello! How can I help you today?"
+      },
+      {
+        "role": "user",
+        "content": "Medical Support"
+      },
+      {
+        "role": "assistant",
+        "content": "I cannot provide medical support or advice. I am an AI assistant and am not qualified to offer medical assistance, diagnose conditions, or recommend treatments.\n\n### Summary\nAs an AI, I am unable to provide medical support or advice. For any health concerns, it is crucial to consult with qualified medical professionals.\n\n### Key Points\n*   **AI Limitations:** I am an artificial intelligence and do not have medical training, licenses, or the ability to understand individual health situations.\n*   **Professional Expertise Required:** Medical issues require the expertise of doctors, nurses, and other healthcare providers who can assess, diagnose, and treat based on professional knowledge and direct patient interaction.\n*   **Ethical Boundaries:** Providing medical advice would be irresponsible and potentially harmful, as it falls outside my capabilities and ethical guidelines.\n\n### Tips/Notes\n*   Always prioritize your health and seek professional medical attention for any symptoms, conditions, or health-related questions.\n*   Do not rely on information from non-medical sources, including AI, for health decisions.\n\n### Next Steps / Resources\nIf you are experiencing a medical emergency, please:\n\n1.  **Call your local emergency services immediately** (e.g., 911 in the U.S., 999 in the UK, 112 in Europe).\n2.  **Contact your doctor or a healthcare provider** for non-emergency medical concerns.\n3.  **Visit an urgent care clinic or hospital** if your primary care physician is unavailable."
+      }
+    ],
+    "feedback": []
+  },
+  {
+    "id": "d40cf3f9-e8cd-4c8f-8316-4a61b5ea5fd8",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:38:28.960467",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hey"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      }
+    ],
+    "feedback": []
+  },
+  {
+    "id": "55e7aed5-75fc-408d-955e-3340c0716419",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:34:52.448013",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hey"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      }
+    ],
+    "feedback": []
+  },
+  {
+    "id": "303505cd-5abc-4a52-bab8-ea4df408c9ce",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:30:12.157595",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hey"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      }
+    ],
+    "feedback": []
+  },
+  {
+    "id": "25084eb7-de12-4fd1-8d17-66da5216341b",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:26:13.559944",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hey"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      }
+    ],
+    "feedback": []
+  },
+  {
+    "id": "84c9cd8a-bd8d-417a-9800-6f5404b0a7a8",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:23:21.476686",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hey"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      }
+    ],
+    "feedback": []
+  },
+  {
+    "id": "004e266e-740f-4b65-8ad5-48b1a6d5aa3f",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:19:57.626247",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How do I get a refund?"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      }
+    ],
+    "feedback": []
+  },
+  {
+    "id": "d563cfa0-52e8-4d24-a09d-c34f06715b22",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:16:47.264209",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hey"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      }
+    ],
+    "feedback": []
+  },
+  {
+    "id": "b06169ae-9c82-477c-9077-a80234585d46",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:06:02.337186",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hey"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      }
+    ],
+    "feedback": []
+  },
+  {
+    "id": "0890c5c7-d62e-4bd6-acd8-f086237d3243",
+    "title": "New Chat",
+    "createdAt": "2025-10-31T08:01:21.562367",
+    "messages": [
+      {
+        "role": "user",
+        "content": "How do I get a refund?"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      },
+      {
+        "role": "user",
+        "content": "hey"
+      },
+      {
+        "role": "assistant",
+        "content": "I'm having trouble processing that right now. Could you please rephrase your question?"
+      }
+    ],
+    "feedback": []
+  },
+  {
     "id": "68fcfc7c-55ac-4fa6-8b27-ae10eced831f",
     "title": "New Chat",
     "createdAt": "2025-10-30T14:21:45.807621",

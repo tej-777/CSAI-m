@@ -1,13 +1,17 @@
 import os
+from dotenv import load_dotenv
+
+# Load variables from a local .env file if present
+load_dotenv()
 
 
 class Settings:
     PORT = int(os.getenv("PORT", 8000))
 
     # Gemini API Configuration
-    GEMINI_API_KEY = ""
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 
-    LANGGRAPH_API_KEY = ""
+    LANGGRAPH_API_KEY = os.getenv("LANGGRAPH_API_KEY", "")
 
     DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///supportai.db")
     FEEDBACK_STORE = "feedback_data.json"

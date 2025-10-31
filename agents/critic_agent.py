@@ -2,7 +2,8 @@ import google.generativeai as genai
 from config import settings
 from utils.logger import logger
 
-genai.configure(api_key=settings.GEMINI_API_KEY)
+# Force API key path (no ADC) and REST transport
+genai.configure(api_key=settings.GEMINI_API_KEY, transport="rest")
 
 
 def provide_feedback(summary: str, original_query: str = "") -> dict:
@@ -11,7 +12,7 @@ def provide_feedback(summary: str, original_query: str = "") -> dict:
     """
     try:
         model = genai.GenerativeModel(
-            model_name='models/gemini-2.5-flash',
+            model_name='gemini-2.5-flash',
             generation_config={'temperature': 0.3, 'max_output_tokens': 100}
         )
 
@@ -31,7 +32,17 @@ Format:
 Score: X/5
 Evaluation: [one sentence]"""
 
-        result = model.generate_content(prompt)
+        try:
+            result = model.generate_content(prompt)
+        except Exception as e:
+            if '404' in str(e) or 'not found' in str(e).lower():
+                model = genai.GenerativeModel(
+                    model_name='gemini-1.5-pro',
+                    generation_config={'temperature': 0.3, 'max_output_tokens': 100}
+                )
+                result = model.generate_content(prompt)
+            else:
+                raise
 
         # Safely extract text
         feedback_text = None

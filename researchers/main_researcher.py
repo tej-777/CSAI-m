@@ -2,8 +2,10 @@ import google.generativeai as genai
 from config import settings
 from utils.logger import logger
 
-# Configure Gemini
-genai.configure(api_key=settings.GEMINI_API_KEY)
+# Configure Gemini (force API key path, avoid ADC)
+genai.configure(api_key=settings.GEMINI_API_KEY, transport="rest")
+
+print("Gemini key loaded:", bool(settings.GEMINI_API_KEY))
 
 
 def handle_universal_query(query: str, conversation_history: list = None) -> dict:
@@ -37,16 +39,22 @@ Formatting (STRICT):
         # Prepare the full prompt
         full_prompt = f"{system_instruction}\n\nConversation history:\n{context}\n\nUser: {query}\n\nAssistant:"
 
-        # Use Gemini 2.5 Flash
+        # Build and call model (fallback to widely available 8B tier, then pro)
         model = genai.GenerativeModel(
-            model_name='models/gemini-2.5-flash',
-            generation_config={
-                'temperature': 0.7,
-                'max_output_tokens': 1024,
-            }
+            model_name='gemini-2.5-flash',
+            generation_config={'temperature': 0.4, 'max_output_tokens': 800}
         )
-
-        response = model.generate_content(full_prompt)
+        try:
+            response = model.generate_content(full_prompt)
+        except Exception as e:
+            if '404' in str(e) or 'not found' in str(e).lower():
+                model = genai.GenerativeModel(
+                    model_name='gemini-2.5-flash',
+                    generation_config={'temperature': 0.4, 'max_output_tokens': 800}
+                )
+                response = model.generate_content(full_prompt)
+            else:
+                raise
         answer = response.text.strip()
 
         logger.info(f"Universal researcher handled query: {query[:50]}...")

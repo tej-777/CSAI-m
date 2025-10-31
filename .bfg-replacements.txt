@@ -1,0 +1,11 @@
+# Replace any Google API-like key leaked
+regex:AIza[0-9A-Za-z\-_]{35}==>GEMINI_KEY_REDACTED
+# Replace the placeholder text that was committed
+regex:(?i)lang\s*graph\s*key==>LANGGRAPH_KEY_REDACTED
+
+# Replace specific LangGraph key pattern (lsv2_pt_...)
+regex:lsv2_pt_[A-Za-z0-9_\-]+==>LANGGRAPH_KEY_REDACTED
+
+# Normalize config assignments to empty strings
+regex:(?i)GEMINI_API_KEY\s*=\s*[^\n]+==>GEMINI_API_KEY = ""
+regex:(?i)LANGGRAPH_API_KEY\s*=\s*[^\n]+==>LANGGRAPH_API_KEY = ""
